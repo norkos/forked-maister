@@ -7,9 +7,9 @@ Maister provides five workflow types, each with phases tailored to its needs. Al
 The unified development workflow handles features, enhancements, and bug fixes through a 14-phase adaptive pipeline. Phases activate or skip based on task type.
 
 ```
-/maister:development
-/maister:development "Add two-factor authentication"
-/maister:development "Fix login timeout" --type=bug
+/maister-fork:development
+/maister-fork:development "Add two-factor authentication"
+/maister-fork:development "Fix login timeout" --type=bug
 ```
 
 When run without arguments, the plugin extracts the task description from your conversation and auto-detects the type (feature, bug, or enhancement). Use `--type=` only when you want to override the auto-detection.
@@ -38,7 +38,7 @@ When run without arguments, the plugin extracts the task description from your c
 Start development informed by a completed research workflow. Research context flows through all phases:
 
 ```
-/maister:development "Implement OAuth" --research=.maister/tasks/research/2026-01-12-oauth-research
+/maister-fork:development "Implement OAuth" --research=.maister/tasks/research/2026-01-12-oauth-research
 ```
 
 Research artifacts are copied to `analysis/research-context/` and summaries pass to every subagent.
@@ -46,7 +46,7 @@ Research artifacts are copied to `analysis/research-context/` and summaries pass
 ### Resume
 
 ```
-/maister:development [task-path] [--from=PHASE] [--reset-attempts]
+/maister-fork:development [task-path] [--from=PHASE] [--reset-attempts]
 ```
 
 Resume phases: `analysis`, `gap`, `spec`, `plan`, `implement`, `verify`
@@ -58,8 +58,8 @@ Resume phases: `analysis`, `gap`, `spec`, `plan`, `implement`, `verify`
 Static code analysis to detect bottlenecks, followed by standard spec/plan/implement/verify pipeline.
 
 ```
-/maister:performance
-/maister:performance "Optimize dashboard loading time"
+/maister-fork:performance
+/maister-fork:performance "Optimize dashboard loading time"
 ```
 
 ### Phases
@@ -81,7 +81,7 @@ Static code analysis to detect bottlenecks, followed by standard spec/plan/imple
 ### Resume
 
 ```
-/maister:performance [task-path] [--from=PHASE] [--reset-attempts]
+/maister-fork:performance [task-path] [--from=PHASE] [--reset-attempts]
 ```
 
 Resume phases: `analysis`, `specification`, `planning`, `implementation`, `verification`
@@ -93,8 +93,8 @@ Resume phases: `analysis`, `specification`, `planning`, `implementation`, `verif
 Multi-source research with synthesis, optional solution brainstorming, and high-level design.
 
 ```
-/maister:research
-/maister:research "What authentication approach fits our architecture?" --type=technical
+/maister-fork:research
+/maister-fork:research "What authentication approach fits our architecture?" --type=technical
 ```
 
 **Research types**: `technical`, `requirements`, `literature`, `mixed`
@@ -119,7 +119,7 @@ Information gathering runs parallel subagents across multiple source categories 
 ### Resume
 
 ```
-/maister:research [task-path] [--from=PHASE] [--reset-attempts]
+/maister-fork:research [task-path] [--from=PHASE] [--reset-attempts]
 ```
 
 Resume phases: `foundation`, `brainstorming-decision`, `brainstorming`, `design`, `outputs`, `verification`, `integration`
@@ -131,9 +131,9 @@ Resume phases: `foundation`, `brainstorming-decision`, `brainstorming`, `design`
 Interactive workflow for designing features and products before building them. Transforms ideas into structured product briefs through collaborative exploration, iterative refinement, and visual prototyping. Phases adapt based on design characteristics (greenfield vs enhancement, simple vs complex, UI-focused vs backend).
 
 ```
-/maister:product-design
-/maister:product-design "Design a dashboard for monitoring API usage"
-/maister:product-design --research=.maister/tasks/research/2026-01-12-auth-research
+/maister-fork:product-design
+/maister-fork:product-design "Design a dashboard for monitoring API usage"
+/maister-fork:product-design --research=.maister/tasks/research/2026-01-12-auth-research
 ```
 
 When run without arguments, the plugin extracts the design brief from your conversation.
@@ -159,13 +159,13 @@ Phases 2, 5, and 6 include iterative refinement loops — you can request revisi
 The output is a structured product brief that can be passed directly to the development workflow:
 
 ```
-/maister:development .maister/tasks/product-design/2026-03-10-api-dashboard
+/maister-fork:development .maister/tasks/product-design/2026-03-10-api-dashboard
 ```
 
 ### Resume
 
 ```
-/maister:product-design [task-path] [--from=PHASE] [--reset-attempts]
+/maister-fork:product-design [task-path] [--from=PHASE] [--reset-attempts]
 ```
 
 Resume phases: `context`, `synthesis`, `problem`, `personas`, `alternatives`, `convergence`, `specification`, `prototyping`, `handoff`

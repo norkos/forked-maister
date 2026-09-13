@@ -2,14 +2,14 @@
 
 ## Unified Entry Point
 
-### `/maister:work [input]`
+### `/maister-fork:work [input]`
 
 Auto-classifies your task and routes to the appropriate workflow. Accepts:
 
 - **No arguments**: Extracts the task from your current conversation context
-- Task description: `/maister:work "Add user profile page"`
-- Task folder path: `/maister:work .maister/tasks/new-features/2026-02-17-user-profile` (resumes)
-- GitHub issue URL: `/maister:work https://github.com/org/repo/issues/42`
+- Task description: `/maister-fork:work "Add user profile page"`
+- Task folder path: `/maister-fork:work .maister/tasks/new-features/2026-02-17-user-profile` (resumes)
+- GitHub issue URL: `/maister-fork:work https://github.com/org/repo/issues/42`
 
 The plugin classifies the task type with confidence scoring, asks for confirmation, then launches the matching orchestrator.
 
@@ -17,7 +17,7 @@ The plugin classifies the task type with confidence scoring, asks for confirmati
 
 ## Development
 
-### `/maister:development [description | task-path]`
+### `/maister-fork:development [description | task-path]`
 
 Starts the unified development workflow (12 adaptive phases) or resumes an existing one. All arguments are optional — when run without a description, the plugin extracts it from your current conversation. Pass an existing task path to resume. Task type (bug/enhancement/feature) is auto-detected from context when `--type` is omitted.
 
@@ -36,7 +36,7 @@ Starts the unified development workflow (12 adaptive phases) or resumes an exist
 
 ## Performance
 
-### `/maister:performance [description | task-path]`
+### `/maister-fork:performance [description | task-path]`
 
 Starts performance optimization with static bottleneck analysis (9 phases) or resumes an existing one. Can be run without arguments — the plugin extracts the optimization target from your conversation. Detects N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, and memory leak patterns.
 
@@ -54,7 +54,7 @@ You can optionally provide profiling data (flame graphs, APM screenshots) — th
 
 ## Research
 
-### `/maister:research [question | task-path]`
+### `/maister-fork:research [question | task-path]`
 
 Starts research workflow (8 phases) with multi-source gathering, synthesis, and optional solution brainstorming, or resumes an existing one. Can be run without arguments — the plugin extracts the research question from your conversation.
 
@@ -66,7 +66,7 @@ Starts research workflow (8 phases) with multi-source gathering, synthesis, and 
 | `--from=PHASE` | Start from or resume at a specific phase |
 | `--reset-attempts` | Reset failed attempt counters (resume) |
 
-Research output can feed into development: `/maister:development --research=.maister/tasks/research/...`
+Research output can feed into development: `/maister-fork:development --research=.maister/tasks/research/...`
 
 **Task directory**: `.maister/tasks/research/`
 **Resume phases**: `foundation`, `brainstorming-decision`, `brainstorming`, `design`, `outputs`, `verification`, `integration`
@@ -75,7 +75,7 @@ Research output can feed into development: `/maister:development --research=.mai
 
 ## Product Design
 
-### `/maister:product-design [description | task-path]`
+### `/maister-fork:product-design [description | task-path]`
 
 Starts the interactive product/feature design workflow (9 adaptive phases) or resumes an existing one. Transforms ideas into structured product briefs through collaborative exploration, iterative refinement, and visual prototyping. Can be run without arguments — the plugin extracts the design brief from your conversation.
 
@@ -86,7 +86,7 @@ Starts the interactive product/feature design workflow (9 adaptive phases) or re
 | `--from=PHASE` | Start from or resume at a specific phase |
 | `--reset-attempts` | Reset failed attempt counters (resume) |
 
-Design output can feed directly into development: `/maister:development .maister/tasks/product-design/...`
+Design output can feed directly into development: `/maister-fork:development .maister/tasks/product-design/...`
 
 **Task directory**: `.maister/tasks/product-design/`
 **Resume phases**: `context`, `synthesis`, `problem`, `personas`, `alternatives`, `convergence`, `specification`, `prototyping`, `handoff`
@@ -97,7 +97,7 @@ Design output can feed directly into development: `/maister:development .maister
 
 Standalone review commands that can be run anytime, independent of workflows.
 
-### `/maister:reviews-code [path]`
+### `/maister-fork:reviews-code [path]`
 
 Automated code quality, security, and performance analysis.
 
@@ -107,15 +107,15 @@ Automated code quality, security, and performance analysis.
 
 Analyzes complexity, duplication, code smells, security vulnerabilities, and performance issues. Generates report with severity levels (Critical/Warning/Info).
 
-### `/maister:reviews-pragmatic [path]`
+### `/maister-fork:reviews-pragmatic [path]`
 
 Detects over-engineering and ensures code matches project scale. Identifies excessive abstraction, enterprise patterns in simple code, infrastructure overkill. Recommends specific simplifications with before/after examples.
 
-### `/maister:reviews-reality-check [task-path]`
+### `/maister-fork:reviews-reality-check [task-path]`
 
 Validates that completed work actually solves the intended problem. Runs tests, checks end-to-end workflows, and evaluates error scenarios. Returns deployment decision: Ready / Issues Found / Not Ready.
 
-### `/maister:reviews-spec-audit [spec-path]`
+### `/maister-fork:reviews-spec-audit [spec-path]`
 
 Independent specification audit with senior auditor perspective.
 
@@ -125,7 +125,7 @@ Independent specification audit with senior auditor perspective.
 
 Identifies ambiguities, missing details, and gaps. Uses external tools (GitHub CLI, Azure CLI) for verification.
 
-### `/maister:reviews-production-readiness [path]`
+### `/maister-fork:reviews-production-readiness [path]`
 
 Pre-deployment verification across 7 dimensions: configuration, monitoring, error handling, performance, security, deployment, and GO/NO-GO recommendation.
 
@@ -137,7 +137,7 @@ Pre-deployment verification across 7 dimensions: configuration, monitoring, erro
 
 ## Standards
 
-### `/maister:init [--standards-from=PATH]`
+### `/maister-fork:init [--standards-from=PATH]`
 
 Initialize the Maister framework. Scans your codebase with a project-analyzer subagent, presents findings for confirmation, then generates:
 
@@ -151,7 +151,7 @@ Initialize the Maister framework. Scans your codebase with a project-analyzer su
 
 If `.maister/` already exists, offers to backup, update, or cancel.
 
-### `/maister:standards-discover [--scope=SCOPE]`
+### `/maister-fork:standards-discover [--scope=SCOPE]`
 
 Auto-discovers coding standards from multiple sources in parallel: config files, source code patterns, documentation, pull requests, and CI/CD pipelines.
 
@@ -165,7 +165,7 @@ Auto-discovers coding standards from multiple sources in parallel: config files,
 
 Presents findings in confidence tiers (high/medium/low) for review before applying.
 
-### `/maister:standards-update [description] [--from=PATH]`
+### `/maister-fork:standards-update [description] [--from=PATH]`
 
 Update or create standards from conversation context or explicit description. When run without arguments, scans your current conversation for standards patterns like "we should always...", "our convention is...", "prefer X over Y" and proposes them as new standards.
 
@@ -179,20 +179,20 @@ Update or create standards from conversation context or explicit description. Wh
 
 Lightweight commands for small tasks that don't need a full orchestrator workflow.
 
-### `/maister:quick-dev [task description]`
+### `/maister-fork:quick-dev [task description]`
 
 Implement a task directly — exactly as the main agent normally would, no planning mode — with standards enforcement. Reads INDEX.md and the specific matched standard files relevant to what you touch, applies them while implementing, and verifies compliance (pass/fail checklist) afterward.
 
 **When to use**: Task is clear, no architectural decisions needed, you know what needs doing.
 
-### `/maister:quick-plan [task description]`
+### `/maister-fork:quick-plan [task description]`
 
 Works exactly like Claude Code's built-in plan mode, with standards enforcement folded in. While planning, it reads INDEX.md and the specific matched standard files (INDEX.md alone is not enough), and the plan must reference the applicable standards and include a Standards Compliance Checklist (verified after implementation) before exiting plan mode.
 
-### `/maister:quick-bugfix [bug description]`
+### `/maister-fork:quick-bugfix [bug description]`
 
 Lightweight TDD-driven bug fix without a full orchestrator workflow. Analyzes the bug, writes a failing test, implements the fix, and verifies the test passes.
 
-**When to use**: Simple, isolated bugs where you can quickly identify the root cause. If the bug is too complex (multiple files, unclear root cause, architectural impact), the skill suggests escalating to `/maister:development`.
+**When to use**: Simple, isolated bugs where you can quickly identify the root cause. If the bug is too complex (multiple files, unclear root cause, architectural impact), the skill suggests escalating to `/maister-fork:development`.
 
 No task directory created — works directly in your codebase.

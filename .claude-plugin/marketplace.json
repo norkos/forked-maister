@@ -1,17 +1,16 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "maister-plugins",
-  "version": "2.2.3",
-  "description": "Structured, standards-aware development workflows for Claude Code",
+  "name": "maister-fork",
+  "version": "3.0.0",
+  "description": "Hardened fork of Maister: structured, standards-aware development workflows for Claude Code with no external MCP servers or browser automation",
   "owner": {
-    "name": "Skillpanel",
-    "email": "marek@skillpanel.com"
+    "name": "norkos"
   },
   "plugins": [
     {
-      "name": "maister",
-      "description": "Structured, standards-aware development workflows for Claude Code",
-      "source": "./plugins/maister",
+      "name": "maister-fork",
+      "description": "Hardened fork of Maister: structured, standards-aware development workflows for Claude Code with no external MCP servers or browser automation",
+      "source": "./plugins/maister-fork",
       "category": "development"
     }
   ]

@@ -22,72 +22,54 @@ docs/                              # User-facing documentation and guides
 
 ## Key Files
 
-- **`@plugins/maister/CLAUDE.md`**: Comprehensive plugin documentation with all skills, commands, agents, and workflow principles. Read this when working on plugin internals.
+- **`@plugins/maister-fork/CLAUDE.md`**: Comprehensive plugin documentation with all skills, commands, agents, and workflow principles. Read this when working on plugin internals.
 - **`README.md`**: User-facing documentation for plugin consumers.
 
 ## Plugin Development
 
 ### Adding a New Skill
 
-1. Create directory: `plugins/maister/skills/[skill-name]/`
+1. Create directory: `plugins/maister-fork/skills/[skill-name]/`
 2. Create `SKILL.md` with workflow phases and execution instructions
 3. Optionally add `references/` directory for supporting documentation
-4. Document in `@plugins/maister/CLAUDE.md` under "Available Skills"
+4. Document in `@plugins/maister-fork/CLAUDE.md` under "Available Skills"
 
 ### Adding a New Command
 
-1. Create markdown file: `plugins/maister/commands/[category]/[command].md`
+1. Create markdown file: `plugins/maister-fork/commands/[category]/[command].md`
 2. Commands are thin wrappers that invoke skills
-3. Document in `plugins/maister/CLAUDE.md` under "Available Commands"
+3. Document in `plugins/maister-fork/CLAUDE.md` under "Available Commands"
 
 ### Adding a New Agent
 
-1. Create markdown file: `plugins/maister/agents/[agent-name].md`
+1. Create markdown file: `plugins/maister-fork/agents/[agent-name].md`
 2. Define agent purpose, tools, and workflow
-3. Document in `plugins/maister/CLAUDE.md` under "Available Subagents"
+3. Document in `plugins/maister-fork/CLAUDE.md` under "Available Subagents"
 
 ## Documentation Principles
 
-This plugin follows specific documentation guidelines (see @plugins/maister/CLAUDE.md section "Plugin Documentation Principles"):
+This plugin follows specific documentation guidelines (see @plugins/maister-fork/CLAUDE.md section "Plugin Documentation Principles"):
 
 - Trust Claude to reason—provide principles, not prescriptive implementations
 - Commands are thin wrappers; orchestration logic lives in skills
 - Reference files guide implementation, not provide complete code
 - Single source of truth: technical details in `SKILL.md`, not scattered across files
 
-## Beta Branch Management
+## Fork and Release Management
 
-The `beta` branch is used for developing and testing new features before they reach `master`.
+This repository is a security-hardened fork of `SkillPanel/maister` (upstream version 2.2.3, commit `f75ef4f`, original author Skillpanel), renamed to `maister-fork`. The original attribution is kept in README.md § Upstream. It does **not** track upstream. Do not merge upstream changes without re-running the security review (see README "Security posture"). There is no beta branch; all work lands on `master`.
 
-### Branch Conventions
+### Releasing a new version
 
-- **master**: Stable releases. Marketplace name: `maister-plugins`, versions: `X.Y.Z`
-- **beta**: Pre-release testing. Marketplace name: `maister-plugins-beta`, versions: `X.Y.Z-beta.N`
+Claude Code caches installed plugins by version, so every change that should reach users needs a version bump in both manifest files, in a separate commit:
+- `.claude-plugin/marketplace.json` — `version` (marketplace name stays `maister-fork`)
+- `plugins/maister-fork/.claude-plugin/plugin.json` — `version`
 
-### Merging beta to master (squash workflow)
-
-1. **Sync beta with master**: `git checkout beta && git merge master`
-2. **Squash-merge to master**: `git checkout master && git merge --squash beta`
-3. **Fix versions before committing**: Restore master's marketplace name (`maister-plugins`) and set the new release version (not beta version) in all three manifest files
-4. **Commit the feature**: `git commit -m "Feature description"`
-5. **Bump version**: Separate commit for the version bump
-6. **Reset beta**: `git checkout beta && git reset --hard master` — required because squash-merge doesn't track merge parents
-7. **Set beta version**: Update manifests to next beta version (e.g., `X.Y.Z-beta.1`) with marketplace name `maister-plugins-beta`, commit
-8. **Push both**: `git push origin master beta`
-
-### Why reset beta after squash?
-
-After `git merge --squash`, git doesn't record that beta's commits were merged. A regular `git merge master` back to beta would try to replay all old commits, causing conflicts. `reset --hard master` is safe because all beta work is preserved on master.
-
-### Manifest files to update
-
-These two files need version/name changes during the merge workflow:
-- `.claude-plugin/marketplace.json` — name + version + descriptions
-- `plugins/maister/.claude-plugin/plugin.json` — version + description
+After bumping, reinstall the plugin (or clear `~/.claude/plugins/cache/maister-fork/`) so the new version is picked up.
 
 ## Testing Changes
 
 1. Navigate to a test project
-2. Run `/maister:init` to initialize the framework
-3. Test commands like `/maister:development "test feature"`
+2. Run `/maister-fork:init` to initialize the framework
+3. Test commands like `/maister-fork:development "test feature"`
 4. Test workflows with different task types and complexity levels

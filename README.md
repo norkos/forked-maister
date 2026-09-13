@@ -1,8 +1,10 @@
 <div align="center">
 
-# Maister
+# Maister Fork
 
 **Structured, standards-aware development workflows for Claude Code**
+
+This is a security-hardened fork of [SkillPanel/maister](https://github.com/SkillPanel/maister) intended for use with private codebases on self-hosted model endpoints such as AWS Bedrock. It does not track upstream. Compared to upstream it removes the Playwright MCP server, browser-driven E2E verification and user-docs generation, the migration workflow, and the GitHub Copilot variant, and it binds the mockup preview server to localhost only. See [Security posture](#security-posture) below.
 
 Describe what you want to build, and the plugin handles the rest - from specification through implementation to verification - while enforcing your project's coding standards at every step.
 
@@ -10,7 +12,7 @@ Describe what you want to build, and the plugin handles the rest - from specific
 
 ## What You Get
 
-- **Guided workflows** for features, bug fixes, enhancements, performance, migrations, research, and product design
+- **Guided workflows** for features, bug fixes, enhancements, performance, research, and product design
 - **Auto-discovered standards** from your codebase - config files, source patterns, and documentation are analyzed and enforced throughout every workflow
 - **Test-driven implementation** with automated planning, incremental verification, and full test suite runs before completion
 - **Pause and resume** any workflow - state is preserved across sessions
@@ -25,8 +27,8 @@ Describe what you want to build, and the plugin handles the rest - from specific
 ### Installation
 
 ```bash
-/plugin marketplace add SkillPanel/maister
-/plugin install maister@maister-plugins
+/plugin marketplace add norkos/forked-maister
+/plugin install maister-fork@maister-fork
 ```
 
 After installing, restart Claude Code (`/exit` and relaunch) to ensure the plugin is fully loaded.
@@ -36,7 +38,7 @@ After installing, restart Claude Code (`/exit` and relaunch) to ensure the plugi
 Initialize your project to auto-detect coding standards and generate project documentation:
 
 ```bash
-/maister:init
+/maister-fork:init
 ```
 
 This scans your codebase and creates `.maister/` with standards, docs, and task folders. May take a few minutes on larger projects.
@@ -44,19 +46,19 @@ This scans your codebase and creates `.maister/` with standards, docs, and task 
 If you have another project already using Maister, you can reuse its standards as a starting point:
 
 ```bash
-/maister:init --standards-from=/path/to/other-project
+/maister-fork:init --standards-from=/path/to/other-project
 ```
 
 ### First Workflow
 
 ```bash
-/maister:development Add user profile page with avatar upload
+/maister-fork:development Add user profile page with avatar upload
 ```
 
 Or just discuss your task with Claude and then run:
 
 ```bash
-/maister:development
+/maister-fork:development
 ```
 
 The plugin picks up context from your conversation - no arguments needed.
@@ -77,12 +79,12 @@ Every workflow command works without arguments. The plugin reads your current co
 
 ```
 You: "The login page throws a 500 error when the session expires"
-You: /maister:development
+You: /maister-fork:development
 → Auto-detects: bug fix, extracts description from conversation
 ```
 
 ```
-You: /maister:standards-update
+You: /maister-fork:standards-update
 → Scans conversation for patterns like "we always use..." or "prefer X over Y"
 ```
 
@@ -92,12 +94,12 @@ You can always be explicit when you prefer - arguments and flags simply override
 
 | Command | Use When |
 |---------|----------|
-| `/maister:development` | Features, bug fixes, enhancements |
-| `/maister:research` | Research with synthesis and solution design |
-| `/maister:performance` | Optimizing speed or resource usage |
-| `/maister:product-design` | Product and feature design |
+| `/maister-fork:development` | Features, bug fixes, enhancements |
+| `/maister-fork:research` | Research with synthesis and solution design |
+| `/maister-fork:performance` | Optimizing speed or resource usage |
+| `/maister-fork:product-design` | Product and feature design |
 
-Task type (feature/bug/enhancement) is auto-detected from context. Override with `--type=feature|bug|enhancement` if needed. Or use `/maister:work` as a single entry point that routes to the right workflow.
+Task type (feature/bug/enhancement) is auto-detected from context. Override with `--type=feature|bug|enhancement` if needed. Or use `/maister-fork:work` as a single entry point that routes to the right workflow.
 
 ### Quick Commands
 
@@ -105,49 +107,67 @@ For smaller tasks that don't need a full workflow:
 
 | Command | Use When |
 |---------|----------|
-| `/maister:quick-plan` | You want a plan with standards awareness before coding |
-| `/maister:quick-dev` | You know what to do - just implement with standards applied |
-| `/maister:quick-bugfix` | Quick TDD-driven bug fix — write failing test, fix, verify |
+| `/maister-fork:quick-plan` | You want a plan with standards awareness before coding |
+| `/maister-fork:quick-dev` | You know what to do - just implement with standards applied |
+| `/maister-fork:quick-bugfix` | Quick TDD-driven bug fix — write failing test, fix, verify |
 
 ## Standards-Aware Development
 
 This is the key differentiator. Maister doesn't just run workflows - it learns your project's conventions and enforces them:
 
-- **`/maister:init`** scans config files, source code, and documentation to auto-detect your coding standards
+- **`/maister-fork:init`** scans config files, source code, and documentation to auto-detect your coding standards
 - **Continuous checking** - standards are consulted before specification, during planning, and while coding (not just at the start)
-- **`/maister:standards-discover`** refreshes standards from your evolving codebase
-- **`/maister:standards-update`** lets you add or refine standards manually, or sync from another project with `--from=PATH`
+- **`/maister-fork:standards-discover`** refreshes standards from your evolving codebase
+- **`/maister-fork:standards-update`** lets you add or refine standards manually, or sync from another project with `--from=PATH`
 
 Standards live in `.maister/docs/standards/` and are indexed in `.maister/docs/INDEX.md`.
 
 **Important**: Run workflows with **auto-accept edits** enabled. Do not use Claude Code's plan mode with workflows (see [Best Practices](#best-practices) below).
 
-## Beta Channel
+## Upstream
 
-Want to try experimental features before they hit stable? Install from the beta channel:
+This plugin is a fork of **Maister** by Skillpanel (Marek, marek@skillpanel.com), originally published at [SkillPanel/maister](https://github.com/SkillPanel/maister) under the marketplace name `maister-plugins`. The fork was taken from upstream version **2.2.3** (commit `f75ef4f`) and renamed to `maister-fork` so it can coexist with, and never be confused for, the original. All credit for the workflow design belongs to the original author; this fork only removes and hardens components for use on private codebases.
 
-```bash
-# Add the beta marketplace
-/plugin marketplace add SkillPanel/Maister#beta
+## Differences from the original plugin
 
-# Install the beta plugin
-/plugin install maister@maister-plugins-beta
+Every change below was made for one reason: this fork is used against private company code, on a self-hosted model endpoint, and nothing derived from that code may leave the machine except the model call itself. Features were removed rather than disabled so that a stray instruction cannot re-enable them.
+
+| Area | Original (2.2.3) | This fork | Why |
+|---|---|---|---|
+| Playwright MCP server | `.mcp.json` ran `npx @playwright/mcp@latest` at every session start | Removed | Downloaded an unpinned package from public npm plus a Chromium build, and exposed `browser_navigate`, `browser_network_request`, and `browser_run_code_unsafe` to the model. Any of those could carry analyzed content to an arbitrary host, including through prompt injection from a file being analyzed. |
+| E2E browser verification | `e2e-test-verifier` agent, development Phase 12, `--e2e` flag | Removed | Depended entirely on the Playwright MCP server. |
+| User documentation generation | `user-docs-generator` agent, development Phase 13, `--user-docs` flag | Removed | Depended on Playwright for screenshots. The migration workflow's documentation step was already gone with the workflow itself. |
+| Migration workflow | `/maister:migration` orchestrator with 8 phases | Removed; "migrate" and "upgrade" tasks route to the development workflow | Its current-state analysis instructed the model to run web searches for version upgrades, which would send internal library names and versions to a search provider. |
+| Mockup preview server | Listened on all network interfaces, ports 3847 to 3850, no authentication | Binds to `127.0.0.1` only | Anyone on the same network could read every rendered mockup (derived from specs and requirements) and post or shut down screens. |
+| Browser opening for mockups | Playwright MCP first, OS `open` command as fallback | OS `open` command only | Follows from removing Playwright. |
+| GitHub Copilot CLI variant | Generated `plugins/maister-copilot/` plus `Makefile`, build script, and CI workflow | Removed | Duplicate surface to audit and keep in sync. Only Claude Code is used. |
+| Destructive-command hook | Required `jq`; when `jq` was missing the guard silently allowed every command | Falls back to regex parsing when `jq` is absent | The guard must fail closed. A missing dependency should not disable a safety control without notice. |
+| Model pinning | `project-analyzer` pinned `model: haiku` | `model: inherit` | On Bedrock the pinned alias may not be provisioned, and all subagents should run on the model the operator configured. |
+| Task artifacts in git | Not addressed | `/maister-fork:init` adds `.maister/tasks/` to the project `.gitignore` | Task folders hold codebase analyses, specs, work logs, and verification reports. They should not be pushed to a remote by accident. |
+| Identity | Plugin `maister`, marketplace `maister-plugins`, owner Skillpanel | Plugin and marketplace `maister-fork`, version 3.0.0, owner norkos | A distinct name and version guarantee Claude Code never serves the cached upstream copy and the two can never be confused on one machine. |
+| Beta channel | `beta` branch with squash-merge release flow | Removed | The fork does not track upstream. Single `master` branch. |
+
+**What is deliberately unchanged**: the development, performance, research, and product-design workflows; all standards discovery; all verification agents; the operator dashboard and HTML companion reports; the `.maister/` directory layout.
+
+**What is left to the operator** (see Security posture below): the `WebSearch` and `WebFetch` tools and the `gh`, `az`, `jira`, and `acli` command-line tools are still mentioned by a few workflows and must be denied through permission settings if outbound access is not wanted.
+
+## Security posture
+
+This fork is meant to run against internal code without sending anything outside your environment beyond the model call itself.
+
+**What the plugin never does**: no telemetry, no analytics, no remote endpoints, no CDN-loaded scripts, no MCP servers. Hook scripts and the mockup preview server are local-only and contain no network calls. All workflow artifacts are written under `.maister/` inside the analyzed repository, and `/maister-fork:init` adds `.maister/tasks/` to the project's `.gitignore`.
+
+**What still needs a permission rule**: a few workflows instruct the model to use the `WebSearch` and `WebFetch` tools (research with external sources, product-design link fetching, issue URL lookup) or issue-tracker CLIs (`gh`, `az`, `jira`, `acli`). Deny them in the settings you deploy with the plugin if outbound access is not wanted:
+
+```json
+{
+  "permissions": {
+    "deny": ["WebSearch", "WebFetch", "Bash(gh *)", "Bash(az *)", "Bash(jira *)", "Bash(acli *)"]
+  }
+}
 ```
 
-If you already have the stable version installed, uninstall it first to avoid conflicts:
-
-```bash
-/plugin uninstall maister@maister-plugins
-```
-
-To switch back to stable:
-
-```bash
-/plugin uninstall maister@maister-plugins-beta
-/plugin install maister@maister-plugins
-```
-
-Beta versions may contain features that are not yet fully tested. Use at your own discretion.
+**Recommended**: install `jq` on the host so the destructive-command hook uses exact JSON parsing (a regex fallback is used otherwise).
 
 ## Best Practices
 
@@ -158,13 +178,13 @@ Beta versions may contain features that are not yet fully tested. Use at your ow
 **Chain workflows by passing a task folder.** If you've completed a research or product-design workflow and want to build on those results, pass the task folder directly:
 
 ```bash
-/maister:development .maister/tasks/research/2026-01-12-oauth-research
+/maister-fork:development .maister/tasks/research/2026-01-12-oauth-research
 ```
 
 You can also append additional instructions to narrow scope or guide the workflow:
 
 ```bash
-/maister:development .maister/tasks/product-design/2026-03-10-dashboard-redesign Implement only phase 1
+/maister-fork:development .maister/tasks/product-design/2026-03-10-dashboard-redesign Implement only phase 1
 ```
 
 ## Known Issues
@@ -172,7 +192,7 @@ You can also append additional instructions to narrow scope or guide the workflo
 **Orchestrator may stall after long phases.** After context compaction (which typically happens after lengthy phases like implementation), the main agent may stop progressing automatically. If you notice it's idle, just type something like "continue" or "proceed" — it will pick up where it left off. You can also re-invoke the workflow in resume mode to reload the orchestrator state:
 
 ```bash
-/maister:development .maister/tasks/development/2026-03-24-my-feature
+/maister-fork:development .maister/tasks/development/2026-03-24-my-feature
 ```
 
 ## Learn More

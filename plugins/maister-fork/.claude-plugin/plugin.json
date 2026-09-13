@@ -1,0 +1,10 @@
+{
+  "name": "maister-fork",
+  "version": "3.0.0",
+  "description": "Hardened fork of Maister: structured, standards-aware development workflows for Claude Code with no external MCP servers or browser automation",
+  "author": {
+    "name": "norkos"
+  },
+  "homepage": "https://github.com/norkos/forked-maister",
+  "repository": "https://github.com/norkos/forked-maister"
+}
