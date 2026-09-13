@@ -51,7 +51,6 @@ Choose which roles to activate from the pool. Each role is a distinct analysis c
 | **Code Analysis** | Analyze code structure, patterns, execution flow | When understanding existing behavior matters |
 | **Context Discovery** | Find tests, consumers, dependencies | When understanding impact/coverage matters |
 | **Pattern Mining** | Find similar implementations as templates | New features following existing patterns |
-| **Migration Target** | Analyze target technology/compatibility | Migrations comparing current vs target |
 
 **Decision signals:**
 - **Specificity** (exact files mentioned → fewer agents)
@@ -68,7 +67,6 @@ Choose which roles to activate from the pool. Each role is a distinct analysis c
 | "Fix login timeout" | File Discovery + Code Analysis (combined), Context Discovery | 2 |
 | "Add OAuth authentication system" | File Discovery, Code Analysis, Context Discovery | 3 |
 | "Add export feature similar to import" | File Discovery, Code Analysis, Pattern Mining | 3 |
-| "Migrate from REST to GraphQL" | File Discovery, Code Analysis, Context Discovery, Migration Target | 4 |
 
 When selecting fewer agents, merge related concerns into a single prompt — don't drop concerns.
 
@@ -88,7 +86,6 @@ State which roles you selected and why (1 sentence).
 | Code Analysis | `references/code-analysis.md` |
 | Context Discovery | `references/context-discovery.md` |
 | Pattern Mining | `references/pattern-mining.md` |
-| Migration Target | `references/migration-target.md` |
 
 If combining roles into one agent, also read `references/combined.md` for merging guidance.
 
@@ -158,5 +155,4 @@ risk_level: low|low-medium|medium|medium-high|high
 | Orchestrator | Phase | artifact_name |
 |-------------|-------|---------------|
 | development orchestrator | Phase 1 | `codebase-analysis.md` (default) |
-| migration orchestrator | Phase 1 | `current-state-analysis.md` |
 | performance orchestrator | Phase 1 | `codebase-analysis.md` (default) |

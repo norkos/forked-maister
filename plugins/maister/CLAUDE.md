@@ -48,7 +48,6 @@ This plugin supports 4 workflow types that route to specialized orchestrators:
 |---------------|---------|-------------|------------------------|
 | **Development** | Bug fixes, enhancements, new features | development | "fix", "bug", "add", "new", "improve", "enhance", "create" |
 | **Performance** | Optimize speed/efficiency | performance | "slow", "optimize", "speed up", "faster" |
-| **Migration** | Move tech/patterns | migration | "migrate", "move from X to Y", "upgrade" |
 | **Research** | Investigate and document findings | research | "research", "investigate", "explore options" |
 | **Product Design** | Design features/products before building | product-design | "design", "product design", "feature design", "wireframe", "prototype" |
 
@@ -208,7 +207,6 @@ The maister plugin uses this structure:
 └── tasks/                        # Development tasks (active, growing)
     ├── development/
     ├── performance/
-    ├── migrations/
     ├── research/
     └── product-design/
 ```
@@ -241,8 +239,6 @@ Development tasks are organized by workflow type in `.maister/tasks/`:
 ├── development/
 │   └── YYYY-MM-DD-task-name/
 ├── performance/
-│   └── YYYY-MM-DD-task-name/
-├── migrations/
 │   └── YYYY-MM-DD-task-name/
 ├── research/
 │   └── YYYY-MM-DD-task-name/
@@ -282,10 +278,8 @@ YYYY-MM-DD-task-name/
 │   ├── implementation-plan.html # Operator-facing HTML companion
 │   ├── visual-coverage.md       # Coverage matrix (when design-context exists)
 │   └── work-log.md              # Chronological activity log
-├── verification/                 # Verification results
-│   ├── spec-audit.md            # Independent spec audit (conditional, complex tasks only)
-│   └── visual-fidelity.md       # Mockup-vs-rendered comparison (when design-context exists, report-only)
-└── documentation/                # User-facing docs (if applicable)
+└── verification/                 # Verification results
+    └── spec-audit.md            # Independent spec audit (conditional, complex tasks only)
 ```
 
 ### Operator Visibility Layer
@@ -303,7 +297,7 @@ Workflow artifacts accumulate deep detail for subagent context — the operator 
 - The task description references mockup file paths (auto-ingested) or design-tool URLs (recorded)
 - `task_characteristics.ui_heavy` is true and no external mockups exist (Phase 4 invokes `mockup-studio` → HTML into `design-context/mockups/` by default, or ASCII into `design-context/ascii/` when `mockup_format: ascii`)
 
-When present, mockups are **binding inputs** to implementation — the planner attaches `Visual References` to UI task groups, the implementer reads each mockup before coding, and Phase 12 produces a structural visual-fidelity report. When no mockups exist, the entire `design-context/` directory is omitted and behavior is unchanged.
+When present, mockups are **binding inputs** to implementation — the planner attaches `Visual References` to UI task groups, and the implementer reads each mockup before coding. When no mockups exist, the entire `design-context/` directory is omitted and behavior is unchanged.
 
 **See**: `skills/development/SKILL.md` § "Design-Informed Development" for the full propagation model.
 
@@ -314,7 +308,7 @@ Task types can add specialized subdirectories as needed (e.g., `analysis/bug-ana
 ### Naming Conventions
 
 **Workflow Type Directories:**
-- Use workflow names: `development/`, `performance/`, `migrations/`, `research/`, `product-design/`
+- Use workflow names: `development/`, `performance/`, `research/`, `product-design/`
 
 **Task Directories:**
 - Format: `YYYY-MM-DD-task-name`
@@ -329,6 +323,7 @@ Task types can add specialized subdirectories as needed (e.g., `analysis/bug-ana
 - **Task Discovery**: Browse `.maister/tasks/` to find development tasks by workflow type
 - **Standards Compliance**: Follow standards from `.maister/docs/standards/` during implementation
 - **Task Tracking**: Task status, priority, tags, and time tracking are in the `task:` section of `orchestrator-state.yml`
+- **Version Control**: `/maister:init` adds `.maister/tasks/` to the project's `.gitignore` so task artifacts (analyses, specs, verification reports) stay local; `.maister/docs/` remains tracked
 - **Activity Logging**: Record work in `implementation/work-log.md` for transparency
 
 ## Plugin Documentation Principles
@@ -522,9 +517,8 @@ Orchestrators manage complete workflows with state management, auto-recovery, an
 
 | Skill | Purpose | Details |
 |-------|---------|---------|
-| `development` | **Unified workflow** (14 phases: 1-14) for all development tasks. Phases activate based on detected task characteristics (not predetermined types). TDD gates activate when defects detected, UI mockups when UI-heavy. | `skills/development/SKILL.md` |
+| `development` | **Unified workflow** (12 phases: 1-12) for all development tasks. Phases activate based on detected task characteristics (not predetermined types). TDD gates activate when defects detected, UI mockups when UI-heavy. | `skills/development/SKILL.md` |
 | `performance` | Static code analysis for bottleneck detection, reuses standard spec/plan/implement/verify pipeline | `skills/performance/SKILL.md` |
-| `migration` | Code/data/architecture migrations with rollback plans | `skills/migration/SKILL.md` |
 | `research` | Multi-source research with synthesis, solution brainstorming, high-level design, and citations | `skills/research/SKILL.md` |
 | `product-design` | **Interactive product/feature design** (9 phases: 0-8) with adaptive scope (feature-level default, product-level when detected), mixed interaction pattern (questioning for exploration, propose-and-refine for convergence), iterative refinement loops, browser-based visual companion, and layered product brief output. | `skills/product-design/SKILL.md` |
 
@@ -548,9 +542,8 @@ Each workflow skill handles both new tasks and resuming existing ones. Pass a ta
 
 | Command | Usage | Task Directory |
 |---------|-------|----------------|
-| `/maister:development` | `[desc] [--e2e] [--user-docs] [--research=PATH] [--sequential]` (new) / `[task-path] [--from=PHASE] [--reset-attempts] [--sequential]` (resume) | `.maister/tasks/development/` |
+| `/maister:development` | `[desc] [--research=PATH] [--sequential]` (new) / `[task-path] [--from=PHASE] [--reset-attempts] [--sequential]` (resume) | `.maister/tasks/development/` |
 | `/maister:performance` | `[desc] [--sequential]` (new) / `[task-path] [--from=PHASE] [--sequential]` (resume) | `.maister/tasks/performance/` |
-| `/maister:migration` | `[desc] [--type=TYPE] [--sequential]` (new) / `[task-path] [--from=PHASE] [--sequential]` (resume) | `.maister/tasks/migrations/` |
 | `/maister:research` | `[question] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/research/` |
 | `/maister:product-design` | `[desc] [--research=PATH] [--no-visual]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/product-design/` |
 
@@ -596,8 +589,8 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 | `docs-operator` | Internal service agent: executes docs-manager operations mid-workflow via Task tool. Has docs-manager skill preloaded. **Special case**: companion agent pattern only works here because docs-manager does NOT spawn subagents (only file operations). Do not use this pattern for skills that spawn subagents. | init, standards-update, standards-discover | `agents/docs-operator.md` |
 | `task-classifier` | Classifies task descriptions into workflow types with confidence scoring | `/work` command | `agents/task-classifier.md` |
 | `gap-analyzer` | Compares current vs desired state with characteristic-detection-based analysis modules | development orchestrator | `agents/gap-analyzer.md` |
-| `specification-creator` | Creates specs from gathered requirements with reusability search and self-verification | development, migration orchestrators | `agents/specification-creator.md` |
-| `implementation-planner` | Breaks specs into task groups with test-driven steps and dependency chains | development, migration orchestrators | `agents/implementation-planner.md` |
+| `specification-creator` | Creates specs from gathered requirements with reusability search and self-verification | development orchestrator | `agents/specification-creator.md` |
+| `implementation-planner` | Breaks specs into task groups with test-driven steps and dependency chains | development orchestrator | `agents/implementation-planner.md` |
 | `codebase-analysis-reporter` | Merges raw Explore agent findings into structured analysis report with deduplication, cross-referencing, and risk assessment | codebase-analyzer skill | `agents/codebase-analysis-reporter.md` |
 
 **Deprecated Agent**:
@@ -608,8 +601,6 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 | Agent | Purpose | Invoked By | Details |
 |-------|---------|------------|---------|
 | `ascii-mockup-generator` | ASCII mockups showing UI integration with existing layouts (the ASCII path of `mockup-studio`; binds to discovered standards/components) | `mockup-studio` skill (when `mockup_format: ascii` or Node unavailable) | `agents/ascii-mockup-generator.md` |
-| `e2e-test-verifier` | Runtime browser verification via Playwright MCP tools (not test file generation) | development orchestrator (optional) | `agents/e2e-test-verifier.md` |
-| `user-docs-generator` | User documentation with Playwright screenshots | development orchestrator (optional) | `agents/user-docs-generator.md` |
 | `html-companion-writer` | Generates an HTML companion report from one finalized markdown artifact (style-guide compliant). For orchestrators that write artifacts inline and have no producing subagent to attach a companion to. | product-design orchestrator (Phases 5/6/8) | `agents/html-companion-writer.md` |
 
 ### Performance Agents
@@ -704,11 +695,13 @@ This hook fires after context compaction and injects a reminder into Claude's co
 
 Blocks destructive shell commands (`git stash`, `git reset --hard`, `git checkout .`, `git clean`, `git push --force`, `rm -rf`) from subagents that should not perform such operations. Uses a whitelist approach — only explicitly trusted execution agents bypass the check:
 
-**Unprotected agents** (full Bash access): `test-suite-runner`, `e2e-test-verifier`, `user-docs-generator`, `docs-operator`
+**Unprotected agents** (full Bash access): `test-suite-runner`, `docs-operator`
 
 `task-group-implementer` is **not** whitelisted. It runs implementation code under the same destructive-command guard as ordinary agents to prevent rogue `git stash` / `reset --hard` from clobbering sibling implementers in a parallel wave (see "Implementation Task Group Tracking" above).
 
 All other agents and the main agent pass through normally. When adding a new agent that needs full Bash access, add it to the `case` statement in the hook script.
+
+The script prefers `jq` to parse the hook input. When `jq` is not installed it falls back to a regex extraction from the raw JSON so the guard still fails closed rather than silently allowing every command.
 
 ## Claude Code Documentation
 

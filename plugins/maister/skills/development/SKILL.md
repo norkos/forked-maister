@@ -90,7 +90,7 @@ Cross-cutting rules from `orchestrator-patterns.md` apply throughout this workfl
 
 1. **Artifact Summary Contract (§ 7)**: every artifact-writing subagent prompt MUST include the contract instruction (artifacts open with TL;DR / Key Decisions / Open Questions & Risks). At context extraction, lift `decisions`, `risks`, and `artifacts` into `phase_summaries.[phase]` (shared entry shape, § 4).
 2. **Dashboard upkeep (§ 8)**: rewrite `dashboard-data.js` at every phase START (mark it `in_progress` before delegating), **BEFORE firing every exit gate** (register the finished phase's artifacts/summary/decisions/risks so the operator reviews them on the dashboard while answering — status stays `in_progress` until the gate passes), after every phase completion (including skips, with reason), every gate decision, every verification cycle, and at finalization. It is a terse projection of state — never duplicate artifact content into it.
-3. **HTML companions (§ 9)**: pass `html_style_guide_path` (absolute path to `../orchestrator-framework/references/html-report-style.md`) to specification-creator, implementation-planner, and e2e-test-verifier. Register returned `html_path` values in `phase_summaries.[phase].artifacts[].html`.
+3. **HTML companions (§ 9)**: pass `html_style_guide_path` (absolute path to `../orchestrator-framework/references/html-report-style.md`) to specification-creator and implementation-planner. Register returned `html_path` values in `phase_summaries.[phase].artifacts[].html`.
 
 ---
 
@@ -98,7 +98,7 @@ Cross-cutting rules from `orchestrator-patterns.md` apply throughout this workfl
 
 Use for **all development tasks**: bug fixes, enhancements, new features, and any work that modifies code.
 
-**DO NOT use for**: Performance optimization, security remediation, migrations, documentation-only, pure refactoring (use specialized orchestrators).
+**DO NOT use for**: Performance optimization, documentation-only, pure research (use specialized orchestrators). Technology and version migrations ARE development tasks.
 
 ---
 
@@ -117,9 +117,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 | 9 | "Verify test passes (TDD Green)" | "Verifying test passes" | When Phase 3 was executed |
 | 10 | "Prompt verification options" | "Prompting verification options" | Always |
 | 11 | "Verify implementation & resolve issues" | "Verifying implementation" | Always |
-| 12 | "Run E2E tests" | "Running E2E tests" | When `e2e_enabled` |
-| 13 | "Generate user documentation" | "Generating user documentation" | When `user_docs_enabled` |
-| 14 | "Finalize workflow" | "Finalizing workflow" | Always |
+| 12 | "Finalize workflow" | "Finalizing workflow" | Always |
 
 ---
 
@@ -161,13 +159,9 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **SELF-CHECK** before continuing: "Did the gap-analyzer return `decisions_needed` items? If yes, did I invoke `AskUserQuestion`? If I skipped this, STOP and go back."
 
 3. Save scope clarifications to `analysis/scope-clarifications.md`
-4. **Set optional phase defaults** based on detected characteristics:
-   - If `task_characteristics.ui_heavy: true` → set `options.e2e_enabled: true`, `options.user_docs_enabled: true`
-   - If `task_characteristics.creates_new_entities: true` → set `options.user_docs_enabled: true`
-   - Command flags (`--e2e`, `--no-e2e`, `--user-docs`, `--no-user-docs`) override these defaults
 
 **Output**: `analysis/gap-analysis.md`, `analysis/scope-clarifications.md` (conditional)
-**State**: Update `task_context.task_characteristics`, `task_context.scope_expanded`, `options.e2e_enabled`, `options.user_docs_enabled`, `phase_summaries.gap_analysis`
+**State**: Update `task_context.task_characteristics`, `task_context.scope_expanded`, `phase_summaries.gap_analysis`
 
 **Context to pass**: Risk level, codebase summary, key files, clarifications, project_doc_paths (from state)
 
@@ -183,7 +177,7 @@ Empty `decisions_needed` skips step 1 only. Step 2 is unconditional. There is no
 - ❌ "The UI change is small/simple, skipping Phase 4..." — STOP. If `ui_heavy` is true, Phase 4 runs. The gap-analyzer made this assessment, not you.
 - ❌ "No new screens needed, just a component..." — STOP. `ui_heavy` is a signal from the gap-analyzer. Do NOT override it with your own complexity judgment.
 
-AskUserQuestion - Display executive summary before asking. Read `analysis/gap-analysis.md` and extract: task type detected, risk level, key characteristics enabled (TDD gates, UI mockups, E2E, user docs), scope decisions made (if any). Then read `task_context.task_characteristics` from `orchestrator-state.yml` and determine the next phase:
+AskUserQuestion - Display executive summary before asking. Read `analysis/gap-analysis.md` and extract: task type detected, risk level, key characteristics enabled (TDD gates, UI mockups), scope decisions made (if any). Then read `task_context.task_characteristics` from `orchestrator-state.yml` and determine the next phase:
 - If `has_reproducible_defect` is true → ask "Continue to Phase 3: TDD Red Gate?"
 - If `ui_heavy` is true → ask "Continue to Phase 4: UI Mockup Generation?"
 - Otherwise → ask "Continue to Phase 5: Technical Approach, Requirements & Specification?"
@@ -399,7 +393,7 @@ AskUserQuestion - "TDD gate passed. Continue to Phase 10?"
 **Purpose**: Determine which verification checks to run using tiered decision matrix
 **Execute**: Direct - display plan, confirm/adjust via AskUserQuestion
 **Output**: Updated state with all verification options
-**State**: Set `options.code_review_enabled`, `options.pragmatic_review_enabled`, `options.reality_check_enabled`, `options.production_check_enabled`, `options.e2e_enabled`, `options.user_docs_enabled`
+**State**: Set `options.code_review_enabled`, `options.pragmatic_review_enabled`, `options.reality_check_enabled`, `options.production_check_enabled`
 **Auto-set**: `skip_test_suite: true` (full test suite already passed during implementation phase; cleared before re-verification if fixes are applied)
 
 **Step 1**: Display the verification plan:
@@ -414,20 +408,12 @@ Verification Plan:
     ✓ Pragmatic review — detects over-engineering
     ✓ Reality check — validates work solves the problem
     ✓ Production readiness — deployment readiness checks
-
-  Conditional:
-    [✓/—] E2E browser testing — [reason]
-    [✓/—] User documentation — [reason]
 ```
 
-**Step 2** (3 questions):
+**Step 2** (1 question):
 
 **Q1** (always): AskUserQuestion (multi-select) — "Which standard verifications to run?"
 Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality check (Recommended)", "Production readiness (Recommended)". All pre-selected.
-
-**Q2** (SKIP if `options.e2e_enabled: false` and no `--e2e` flag): AskUserQuestion — "Enable E2E browser verification?" Options: "Yes (Recommended)", "No, skip".
-
-**Q3** (SKIP if `options.user_docs_enabled: false` and no `--user-docs` flag): AskUserQuestion — "Generate user documentation?" Options: "Yes (Recommended)", "No, skip".
 
 → **MANDATORY GATE** — fires regardless of permission mode, session-reminders, or prior approval patterns. Invoke `AskUserQuestion` now. Proceeding without a user response is a protocol violation (orchestrator-patterns.md § 2 / § 2.1).
 
@@ -493,49 +479,7 @@ AskUserQuestion - Display executive summary: total issues found, issues fixed, i
 
 ---
 
-### Phase 12: E2E Testing (Optional)
-
-> **Phase entry self-check**: Before executing this phase, locate the `AskUserQuestion` tool call from Phase 11 in this conversation. If you cannot point to its call ID, STOP and fire that gate now. State updates (`completed_phases`, `TaskUpdate`) without a corresponding `AskUserQuestion` call are protocol violations — never paper over a missed gate by updating state.
-
-> **⚠ Serialization rule**: Phases 12 and 13 share the Playwright MCP browser instance. They MUST run strictly sequentially. Do NOT dispatch the Phase 12 Task call and the Phase 13 Task call in the same assistant message, even when both are enabled. Wait for Phase 12 to return, honor the `→ **MANDATORY GATE** — fires regardless of permission mode, session-reminders, or prior approval patterns. Invoke `AskUserQuestion` now. Proceeding without a user response is a protocol violation (orchestrator-patterns.md § 2 / § 2.1).` / `AskUserQuestion` gate below, then start Phase 13. Concurrent dispatch will corrupt both browser sessions.
-
-**Purpose**: Runtime browser verification with screenshots (via Playwright MCP tools, not test file generation)
-**Execute**: Task tool - `maister:e2e-test-verifier` subagent
-**Prompt must include**: task_path (absolute), spec_path, base_url, html_style_guide_path (for the HTML companion reports). If `analysis/design-context/mockups/` exists, also include `design_context_path` so the verifier performs an LLM-judged structural visual-fidelity comparison and writes `verification/visual-fidelity.md`. Report saves to `{task_path}/verification/e2e-verification-report.md`.
-**Output**: `verification/e2e-verification-report.md` (+ `.html` companion), screenshots, `verification/visual-fidelity.md` (+ `.html` companion) (when mockups present — report-only, never gates completion)
-**State**: Update E2E results; on success mark Phase 12 in `completed_phases` (Phase 13 reads this as a precondition).
-
-**Skip if**: `options.e2e_enabled = false`
-
-→ **MANDATORY GATE** — fires regardless of permission mode, session-reminders, or prior approval patterns. Invoke `AskUserQuestion` now. Proceeding without a user response is a protocol violation (orchestrator-patterns.md § 2 / § 2.1).
-
-AskUserQuestion - "E2E complete. Continue to Phase 13?"
-
----
-
-### Phase 13: User Documentation (Optional)
-
-> **Phase entry self-check**: Before executing this phase, locate the `AskUserQuestion` tool call from the preceding phase in this conversation. If you cannot point to its call ID, STOP and fire that gate now. State updates (`completed_phases`, `TaskUpdate`) without a corresponding `AskUserQuestion` call are protocol violations — never paper over a missed gate by updating state.
-
-> **⚠ Serialization rule**: Phases 12 and 13 share the Playwright MCP browser instance — see the same rule on Phase 12. Phase 13 MUST NOT be dispatched in the same assistant message as Phase 12, regardless of how the user answered the gate.
-
-**Preconditions**: If `options.e2e_enabled = true`, Phase 12 MUST be present in `completed_phases` before Phase 13 starts. If it is not yet completed (e.g., E2E is still running or failed), do not start Phase 13 — return to the Phase 12 gate.
-
-**Purpose**: Generate user-facing documentation with screenshots
-**Execute**: Task tool - `maister:user-docs-generator` subagent
-**Prompt must include**: task_path (absolute), spec_path, base_url. **When Phase 12 ran successfully** (E2E enabled and completed), also include `e2e_screenshots_path: {task_path}/verification/screenshots/` together with the instruction *"Reuse applicable E2E screenshots from this directory before capturing new ones via Playwright."* When Phase 12 was skipped or failed, omit `e2e_screenshots_path` entirely. Guide saves to `{task_path}/documentation/user-guide.md`.
-**Output**: `documentation/user-guide.md`, screenshots (reused from E2E run when applicable)
-**State**: Update docs generation status
-
-**Skip if**: `options.user_docs_enabled = false`
-
-→ **MANDATORY GATE** — fires regardless of permission mode, session-reminders, or prior approval patterns. Invoke `AskUserQuestion` now. Proceeding without a user response is a protocol violation (orchestrator-patterns.md § 2 / § 2.1).
-
-AskUserQuestion - "Documentation complete. Continue to Phase 14?"
-
----
-
-### Phase 14: Finalization
+### Phase 12: Finalization
 
 > **Phase entry self-check**: Before executing this phase, locate the `AskUserQuestion` tool call from the preceding phase in this conversation. If you cannot point to its call ID, STOP and fire that gate now. State updates (`completed_phases`, `TaskUpdate`) without a corresponding `AskUserQuestion` call are protocol violations — never paper over a missed gate by updating state.
 
@@ -565,8 +509,6 @@ orchestrator:
     mockup_format: html  # Seeded from .maister/config.yml at init (default html). Passed to mockup-studio in Phase 4. Auto-falls back to ascii when Node unavailable.
     spec_audit_enabled: true
     skip_test_suite: true
-    e2e_enabled: null
-    user_docs_enabled: null
     code_review_enabled: true
     pragmatic_review_enabled: true
     reality_check_enabled: true
@@ -640,16 +582,10 @@ orchestrator:
 │   ├── work-log.md                # Phase 8
 │   ├── tdd-red-gate.md            # Phase 3 (conditional)
 │   └── tdd-green-gate.md          # Phase 9 (conditional)
-├── verification/
-│   ├── spec-audit.md              # Phase 6 (recommended)
-│   ├── implementation-verification.md  # Phase 11
-│   ├── implementation-verification.html # Phase 11 (HTML companion)
-│   ├── e2e-verification-report.md      # Phase 12 (optional)
-│   ├── e2e-verification-report.html    # Phase 12 (HTML companion)
-│   ├── visual-fidelity.md              # Phase 12 (when design-context exists, report-only)
-│   └── visual-fidelity.html            # Phase 12 (HTML companion)
-└── documentation/
-    └── user-guide.md              # Phase 13 (optional)
+└── verification/
+    ├── spec-audit.md              # Phase 6 (recommended)
+    ├── implementation-verification.md  # Phase 11
+    └── implementation-verification.html # Phase 11 (HTML companion)
 ```
 
 ---
@@ -676,8 +612,6 @@ orchestrator:
 | `--from=PHASE` | Start from specific phase |
 | `--research=PATH` | Link to completed research task |
 | `--audit` / `--no-audit` | Force/skip specification audit |
-| `--e2e` / `--no-e2e` | Force/skip E2E testing |
-| `--user-docs` / `--no-user-docs` | Force/skip user documentation |
 | `--sequential` | Disable parallel wave dispatch in the executor; run one task group at a time. Persisted as `orchestrator.options.sequential: true` in `orchestrator-state.yml` and read by `implementation-plan-executor` Phase 2. Defaults to off (parallel waves). |
 
 ---
@@ -757,7 +691,6 @@ Auto-detected file paths (`.html`, `.png`, `.jpg`, `.jpeg`, `.gif`, `.svg`, `.pd
 | Phase 5 | `specification-creator` reads from `design-context/` (single source); produces "Visual Design" section in spec.md |
 | Phase 7 | `implementation-planner` enumerates screens from `design-context/INDEX.md`, attaches required `Visual References` to UI task groups, produces `implementation/visual-coverage.md` proving every screen is covered by ≥1 group |
 | Phase 8 | `task-group-implementer` reads each referenced mockup before coding; layout, copy, field order, and explicit states are binding |
-| Phase 12 | `e2e-test-verifier` performs LLM-judged structural visual-fidelity comparison after capturing screenshots; writes `verification/visual-fidelity.md` (report-only, never gates completion) |
 
 ### Graceful Degradation
 
@@ -765,7 +698,7 @@ When no mockups are detected at any source, the entire design-context machinery 
 - No `design-context/` directory
 - No `design_reference` in state (remains null)
 - No `Visual References` field in task groups (planner omits the section entirely)
-- No `visual-coverage.md` or `visual-fidelity.md`
+- No `visual-coverage.md`
 
 Non-UI tasks see zero behavior change.
 
@@ -774,7 +707,7 @@ Non-UI tasks see zero behavior change.
 ## Command Integration
 
 Invoked via:
-- `/maister:development [description] [--e2e] [--user-docs] [--research=PATH]` (new)
+- `/maister:development [description] [--research=PATH]` (new)
 - `/maister:development [task-path] [--from=PHASE] [--reset-attempts]` (resume)
 
 ---

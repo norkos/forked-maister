@@ -80,7 +80,7 @@ Cross-cutting rules from `orchestrator-patterns.md` (same as the development and
 
 Use for **product and feature design**: defining what to build before building it. Greenfield products, new features, enhancements, API designs, workflow designs.
 
-**DO NOT use for**: Implementation tasks (use `/maister:development`), pure research (use `/maister:research`), bug fixes, performance optimization, migrations.
+**DO NOT use for**: Implementation tasks (use `/maister:development`), pure research (use `/maister:research`), bug fixes, performance optimization.
 
 **When to use this vs development orchestrator**: If you need to explore the problem space, evaluate alternatives, and define requirements interactively before any code is written, use this. If you already know what to build and need to plan and execute, use development.
 
@@ -790,7 +790,7 @@ The development orchestrator auto-detects the product-design task path during in
 - `outputs/product-brief.md` → `analysis/design-context/brief.md`
 - `analysis/mockups/*` → `analysis/design-context/mockups/`
 
-It then generates `analysis/design-context/INDEX.md` (screen/component inventory with stable IDs) and propagates design context through all subsequent phases via `task_context.phase_summaries.design`. The product brief's Layer 0 maps to requirements, design characteristics map to task characteristics, and mockup references become **binding inputs** to implementation: the implementation-planner attaches `Visual References` to UI task groups, task-group-implementer reads each mockup before coding, and Phase 12 produces a visual-fidelity report comparing rendered screens against source mockups.
+It then generates `analysis/design-context/INDEX.md` (screen/component inventory with stable IDs) and propagates design context through all subsequent phases via `task_context.phase_summaries.design`. The product brief's Layer 0 maps to requirements, design characteristics map to task characteristics, and mockup references become **binding inputs** to implementation: the implementation-planner attaches `Visual References` to UI task groups, and task-group-implementer reads each mockup before coding.
 
 **See**: `skills/development/SKILL.md` § "Design-Informed Development" for full propagation semantics.
 

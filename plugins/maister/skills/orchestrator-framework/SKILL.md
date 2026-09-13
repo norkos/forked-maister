@@ -51,7 +51,6 @@ All orchestrators follow these principles:
 
 - `development` (bug fixes, enhancements, features)
 - `performance`
-- `migration`
 - `research`
 
 ## NOT an Executable Skill

@@ -134,6 +134,13 @@ html_output: true
 mockup_format: html
 ```
 
+**Step 3 — Keep task artifacts out of version control** (Edit/Write tool, directly): workflow task directories under `.maister/tasks/` contain specs, codebase analyses, work logs, and verification reports derived from the project's source. Ensure the project's root `.gitignore` contains a `.maister/tasks/` entry: append the block below if the entry is missing, create `.gitignore` if it does not exist, and leave the file untouched if the entry is already present. Never remove or reorder existing lines. Reference documentation in `.maister/docs/` stays tracked so standards are shared with the team.
+
+```gitignore
+# Maister workflow artifacts (task specs, analyses, verification reports)
+.maister/tasks/
+```
+
 ---
 
 ## PHASE 6: Generate Project Documentation
@@ -169,6 +176,7 @@ Wait for docs-operator to complete, then immediately continue with Step 2.
 - Verify selected docs exist
 - Verify selected standards directories exist
 - Verify CLAUDE.md integration
+- Verify `.gitignore` contains `.maister/tasks/`
 
 **Step 3**: Display comprehensive summary:
 - Project analysis results (type, language, framework, architecture)

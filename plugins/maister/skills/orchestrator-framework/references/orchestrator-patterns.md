@@ -230,8 +230,6 @@ orchestrator:
 
   # Optional phase flags
   options:
-    e2e_enabled: true | false | null
-    user_docs_enabled: true | false | null
     code_review_enabled: true | false | null
     sequential: true | false | null  # Set by --sequential. Read by implementation-plan-executor Phase 2 to disable parallel wave dispatch.
     html_output: true | false        # Seeded from .maister/config.yml at init (default true). Gates dashboard + HTML companions — see "Project Configuration" below.
@@ -264,7 +262,6 @@ Orchestrators add domain-specific fields using `[domain]_context`:
 |--------|---------------|----------------|
 | Development | `task_context` | risk_level, ui_heavy, architecture_decision |
 | Performance | `performance_context` | baseline_p95, target_p95, optimizations_completed |
-| Migration | `migration_context` | migration_type, steps_completed |
 | Research | `research_context` | research_type, research_question, confidence_level |
 
 See each orchestrator's SKILL.md "Domain Context" section for full schema.
@@ -460,7 +457,7 @@ window.MAISTER_DATA = {
                                 // § 4 Timestamp Rule; never date-only, never T00:00:00Z.
                                 // (display only — the viewer detects updates by content comparison)
   task: {
-    title: "", type: "development|performance|migration|research|product-design",
+    title: "", type: "development|performance|research|product-design",
     status: "pending|in_progress|completed|failed|blocked",
     description: "", path: "",
     current_activity: null        // short present-continuous line for the running phase
@@ -512,8 +509,6 @@ Selected high-value artifacts get a rich HTML companion written by the **same su
 | `implementation/spec.md` | `implementation/spec.html` | specification-creator |
 | `implementation/implementation-plan.md` | `implementation/implementation-plan.html` | implementation-planner |
 | `verification/implementation-verification.md` | `verification/implementation-verification.html` | implementation-verifier |
-| `verification/e2e-verification-report.md` | `verification/e2e-verification-report.html` | e2e-test-verifier |
-| `verification/visual-fidelity.md` | `verification/visual-fidelity.html` | e2e-test-verifier |
 | `outputs/research-report.md` | `outputs/research-report.html` | research-synthesizer |
 | `outputs/solution-exploration.md` | `outputs/solution-exploration.html` | solution-brainstormer |
 | `outputs/high-level-design.md` | `outputs/high-level-design.html` | solution-designer |

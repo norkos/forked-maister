@@ -321,7 +321,7 @@ let activePort = null;
 function tryPort(port) {
   return new Promise((resolve, reject) => {
     const server = http.createServer(handler);
-    server.listen(port, () => resolve(server));
+    server.listen(port, '127.0.0.1', () => resolve(server));
     server.on('error', reject);
   });
 }

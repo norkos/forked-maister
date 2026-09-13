@@ -44,4 +44,4 @@ Before considering an orchestrator complete, verify ALL items:
 ## Reference
 
 - **`orchestrator-patterns.md`** — Execution rules, schemas, and patterns
-- **Existing orchestrators** — Use as implementation examples (development, performance, migration, research)
+- **Existing orchestrators** — Use as implementation examples (development, performance, research)

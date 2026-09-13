@@ -57,7 +57,6 @@ Auto-classifies tasks and routes to the appropriate workflow orchestrator. Suppo
 |----------------|-------------------|
 | development | `maister:development` |
 | performance | `maister:performance` |
-| migration | `maister:migration` |
 | research | `maister:research` |
 | product-design | `maister:product-design` |
 
@@ -94,7 +93,6 @@ Auto-classifies tasks and routes to the appropriate workflow orchestrator. Suppo
 |--------|--------------|
 | `development/` | development |
 | `performance/` | performance |
-| `migrations/` | migration |
 | `research/` | research |
 | `product-design/` | product-design |
 
@@ -142,7 +140,7 @@ Use Skill tool:
 Examples:
 - Resume development: `skill: "maister:development"` with `args: "--resume .maister/tasks/development/2025-10-23-fix"`
 - Restart from phase: `skill: "maister:development"` with `args: "--resume .maister/tasks/development/2025-10-26-auth --from=verify"`
-- Fresh attempts: `skill: "maister:migration"` with `args: "--resume .maister/tasks/migrations/2025-10-20-redux --reset-attempts"`
+- Fresh attempts: `skill: "maister:development"` with `args: "--resume .maister/tasks/development/2025-10-20-redux --reset-attempts"`
 
 ### Step 3: Classify & Route New Task
 
@@ -169,7 +167,7 @@ The subagent will:
 2. **Parse classification result:**
 ```yaml
 classification:
-  task_type: [development|performance|migration|research|product-design]
+  task_type: [development|performance|research|product-design]
   confidence: [percentage]
   reasoning: [explanation]
 ```
@@ -205,9 +203,8 @@ Display:
 Use AskUserQuestion with options:
 1. Development - Fix bugs, improve features, or add new capabilities
 2. Performance - Optimize speed/efficiency
-3. Migration - Move to new tech/pattern
-4. Research - Investigate and document findings
-5. Product Design - Design features or products before building them
+3. Research - Investigate and document findings
+4. Product Design - Design features or products before building them
 
 Then route to selected workflow using Skill tool.
 ```
@@ -230,7 +227,6 @@ Display:
 |---------------|-------|------|
 | development | `maister:development` | `--resume [path] [--from=PHASE] [--reset-attempts]` |
 | performance | `maister:performance` | `--resume [path] [--from=PHASE]` |
-| migration | `maister:migration` | `--resume [path] [--from=PHASE]` |
 | research | `maister:research` | `--resume [path] [--from=PHASE]` |
 | product-design | `maister:product-design` | `--resume [path] [--from=PHASE]` |
 

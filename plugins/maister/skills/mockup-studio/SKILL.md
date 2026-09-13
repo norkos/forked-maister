@@ -6,7 +6,7 @@ user-invocable: true
 
 # Mockup Studio
 
-The single, reusable engine for generating UI mockups in the maister plugin. It runs in the **main agent context** (not a subagent), so it can start a local visual-companion server (Bash), open a browser (Playwright MCP), and run interactive `AskUserQuestion` refinement gates.
+The single, reusable engine for generating UI mockups in the maister plugin. It runs in the **main agent context** (not a subagent), so it can start a local visual-companion server (Bash), open a browser (OS open command), and run interactive `AskUserQuestion` refinement gates.
 
 Two ways it runs:
 
@@ -81,7 +81,7 @@ Read `references/visual-companion.md` for the full protocol. Then:
 2. **Start the server** (Bash):
    `node ${CLAUDE_PLUGIN_ROOT}/skills/mockup-studio/server/index.mjs --task-path=${task_path} --output-subdir=${output_subdir} &`
    Wait ~1s, verify `curl -s http://localhost:${port}/status` returns ok (try 3847–3850).
-3. **Open browser** (best-effort, non-blocking): Playwright MCP `browser_navigate` to `http://localhost:${port}` → fallback `open`/`xdg-open` → fallback log the URL.
+3. **Open browser** (best-effort, non-blocking): `open`/`xdg-open`/`start` to `http://localhost:${port}` → fallback log the URL.
 4. **Generate user-facing wireframes** — one screen per relevant view implied by `context`. Title each screen specifically (e.g. "Add New Allergy Form", not "Dashboard"). Bind to discovered tokens/components/CSS variables by their real names. Add `data-screen="slug"` to clickable elements for click-through navigation, and `annotations` for component-reuse / integration / interaction hints (NOT requirements). Generate USER-FACING UI only — never architecture/data-flow/ER diagrams.
 5. **POST each screen**: `POST http://localhost:${port}/update` with `{type, title, html, css, annotations}`. Each POST auto-saves `<output_subdir>/{slug}.html`.
 
@@ -135,7 +135,7 @@ This gives users an ad-hoc mockup session without running a full development or 
 |---|---|---|
 | Node.js unavailable | `node --version` fails | ASCII via `ascii-mockup-generator`; note it in `notes` |
 | All ports 3847–3850 in use | server start fails on every port | ASCII fallback |
-| Browser won't open | Playwright + `open` both fail | Log the URL; continue (server still saves to disk) |
+| Browser won't open | `open` command fails | Log the URL; continue (server still saves to disk) |
 | No design resources found | discovery `found_any: false` | Generate from codebase patterns only — unchanged behavior |
 
 Never block the caller because a mockup enhancement failed. The mockup files on disk are the deliverable; live preview is additive.

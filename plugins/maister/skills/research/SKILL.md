@@ -479,7 +479,7 @@ options:
 
 ### As Embedded Research Phase
 
-**Invoked by**: development orchestrator, migration orchestrator
+**Invoked by**: development orchestrator
 
 **Integration**:
 1. Parent orchestrator invokes research skill

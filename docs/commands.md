@@ -19,13 +19,11 @@ The plugin classifies the task type with confidence scoring, asks for confirmati
 
 ### `/maister:development [description | task-path]`
 
-Starts the unified development workflow (14 adaptive phases) or resumes an existing one. All arguments are optional — when run without a description, the plugin extracts it from your current conversation. Pass an existing task path to resume. Task type (bug/enhancement/feature) is auto-detected from context when `--type` is omitted.
+Starts the unified development workflow (12 adaptive phases) or resumes an existing one. All arguments are optional — when run without a description, the plugin extracts it from your current conversation. Pass an existing task path to resume. Task type (bug/enhancement/feature) is auto-detected from context when `--type` is omitted.
 
 | Flag | Description |
 |------|-------------|
 | `--type=bug\|enhancement\|feature` | Specify task type (auto-detected if omitted) |
-| `--e2e` | Include E2E testing phase |
-| `--user-docs` | Generate user documentation phase |
 | `--code-review` | Include code review phase |
 | `--research=PATH` | Start development informed by a completed research task |
 | `--from=PHASE` | Start from or resume at a specific phase |
@@ -51,23 +49,6 @@ You can optionally provide profiling data (flame graphs, APM screenshots) — th
 
 **Task directory**: `.maister/tasks/performance/`
 **Resume phases**: `analysis`, `specification`, `planning`, `implementation`, `verification`
-
----
-
-## Migration
-
-### `/maister:migration [description | task-path]`
-
-Starts migration workflow (8 phases) with mandatory rollback planning and risk assessment, or resumes an existing one. Can be run without arguments — the plugin extracts migration details from your conversation.
-
-| Flag | Description |
-|------|-------------|
-| `--type=code\|data\|architecture\|general` | Migration type (affects risk focus) |
-| `--from=PHASE` | Start from or resume at a specific phase |
-| `--reset-attempts` | Reset failed attempt counters (resume) |
-
-**Task directory**: `.maister/tasks/migrations/`
-**Resume phases**: `analysis`, `target`, `spec`, `plan`, `execute`, `verify`, `docs`
 
 ---
 

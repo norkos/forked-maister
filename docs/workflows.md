@@ -14,7 +14,7 @@ The unified development workflow handles features, enhancements, and bug fixes t
 
 When run without arguments, the plugin extracts the task description from your conversation and auto-detects the type (feature, bug, or enhancement). Use `--type=` only when you want to override the auto-detection.
 
-**Flags**: `--type=bug|enhancement|feature`, `--e2e`, `--user-docs`, `--code-review`, `--research=PATH`, `--from=PHASE`
+**Flags**: `--type=bug|enhancement|feature`, `--code-review`, `--research=PATH`, `--from=PHASE`
 
 ### Phases
 
@@ -31,9 +31,7 @@ When run without arguments, the plugin extracts the task description from your c
 | 9 | TDD Green gate (verify test passes) | Bug fixes only |
 | 10 | Verification options selection | All |
 | 11 | Verification + issue resolution | All |
-| 12 | E2E testing | Optional (`--e2e`) |
-| 13 | User documentation | Optional (`--user-docs`) |
-| 14 | Finalization | All |
+| 12 | Finalization | All |
 
 ### Research-Based Development
 
@@ -87,46 +85,6 @@ Static code analysis to detect bottlenecks, followed by standard spec/plan/imple
 ```
 
 Resume phases: `analysis`, `specification`, `planning`, `implementation`, `verification`
-
----
-
-## Migration
-
-Technology, data, and architecture migrations with rollback planning and risk assessment.
-
-```
-/maister:migration
-/maister:migration "Migrate from REST to GraphQL" --type=code
-```
-
-**Migration types**: `code`, `data`, `architecture`, `general`
-
-### Phases
-
-| # | Phase |
-|---|-------|
-| 1 | Current state analysis |
-| 2 | Target state planning + gap identification |
-| 3 | Migration requirements + strategy specification (includes rollback plan) |
-| 4 | Implementation planning |
-| 5 | Migration execution |
-| 6 | Verification + compatibility testing |
-| 7 | Issue resolution (conditional, halts on data integrity issues) |
-| 8 | Documentation (optional) |
-
-**Key behaviors**:
-- Rollback planning is mandatory
-- Dual-run support for zero-downtime migrations
-- Halts on data integrity issues (no automatic recovery)
-- External research for version upgrades via web search
-
-### Resume
-
-```
-/maister:migration [task-path] [--from=PHASE] [--reset-attempts]
-```
-
-Resume phases: `analysis`, `target`, `spec`, `plan`, `execute`, `verify`, `docs`
 
 ---
 
@@ -222,7 +180,6 @@ All workflows create structured directories in `.maister/tasks/`:
 .maister/tasks/
 ├── development/           # All development tasks (features, bugs, enhancements)
 ├── performance/           # Performance optimization
-├── migrations/            # Migrations
 ├── research/              # Research
 └── product-design/        # Product design
 ```

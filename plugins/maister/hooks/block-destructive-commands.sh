@@ -7,8 +7,17 @@
 # Hook output: JSON with permissionDecision: "deny" to block, or exit 0 to allow.
 
 INPUT=$(cat)
-AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // empty')
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+
+if command -v jq >/dev/null 2>&1; then
+  AGENT_TYPE=$(printf '%s' "$INPUT" | jq -r '.agent_type // empty')
+  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty')
+else
+  # jq is not installed. Fall back to a crude regex extraction from the raw JSON so the
+  # guard fails CLOSED (still blocks destructive commands for subagents) instead of
+  # silently allowing everything because both fields came back empty.
+  AGENT_TYPE=$(printf '%s' "$INPUT" | grep -oE '"agent_type"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed -E 's/^"agent_type"[[:space:]]*:[[:space:]]*"//; s/"$//')
+  COMMAND=$(printf '%s' "$INPUT" | grep -oE '"command"[[:space:]]*:[[:space:]]*"([^"\\]|\\.)*"' | head -1 | sed -E 's/^"command"[[:space:]]*:[[:space:]]*"//; s/"$//')
+fi
 
 # Allow main agent (no agent_type) — user's permission system handles that
 if [ -z "$AGENT_TYPE" ]; then
@@ -20,7 +29,7 @@ fi
 # to prevent rogue git stash/reset --hard from clobbering sibling implementers
 # running in parallel waves.
 case "$AGENT_TYPE" in
-  test-suite-runner|e2e-test-verifier|user-docs-generator|docs-operator)
+  test-suite-runner|docs-operator)
     exit 0
     ;;
 esac

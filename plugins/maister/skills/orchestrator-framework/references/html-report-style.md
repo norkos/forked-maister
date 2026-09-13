@@ -71,7 +71,7 @@ Directly under the header, every companion shows 3-5 headline numbers as tiles:
 .tile span { font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--dim); }
 ```
 
-Per artifact: **spec** → requirements count, reuse vs new components, risk level; **plan** → groups, steps, expected tests, execution order; **verification** → verdict, issues by severity; **e2e** → scenarios passed/failed, verdict; **visual-fidelity** → match/deviation/drift counts; **research-report** → findings, sources, confidence level; **solution-exploration** → alternatives explored, recommended approach; **high-level-design** → components, decisions, architecture style; **decision-log** → ADR count by status.
+Per artifact: **spec** → requirements count, reuse vs new components, risk level; **plan** → groups, steps, expected tests, execution order; **verification** → verdict, issues by severity; **research-report** → findings, sources, confidence level; **solution-exploration** → alternatives explored, recommended approach; **high-level-design** → components, decisions, architecture style; **decision-log** → ADR count by status.
 
 ## Anchor TOC (conditional)
 
@@ -127,8 +127,6 @@ details > summary { cursor:pointer; font-weight:600; }
 | `spec.html` | TL;DR + scope in/out side-by-side | Requirements table (id, requirement, priority), user-story cards, visual-design references with mockup thumbnails when present, collapsed `<details>` for technical depth |
 | `implementation-plan.html` | Group count, dependency overview | Task-group cards with dependency arrows (inline SVG or arrow glyphs), per-group checklists, files-to-modify as `<code>` chips, wave/parallelism hints |
 | `implementation-verification.html` | Verdict banner (pass / pass-with-issues / fail) | Findings table sorted critical→info with `.sev` badges, per-check section status, fixes-applied list with ✓ |
-| `e2e-verification-report.html` | Pass/fail scenario counts | Scenario cards with embedded screenshots (`img.shot`, relative paths), step status lists |
-| `visual-fidelity.html` | Overall fidelity verdict | Side-by-side mockup vs rendered screenshot pairs, per-screen discrepancy notes |
 | `research-report.html` | Confidence level, findings/sources counts | Findings table (title, category, confidence badge, sources), insight cards, SWOT grid, collapsed `<details>` for evidence/citations |
 | `solution-exploration.html` | Alternatives count, recommended approach | Alternative cards side-by-side, trade-off comparison matrix as a table, recommended card highlighted (accent border), "why not others" collapsed |
 | `high-level-design.html` | Architecture style, components/decisions counts | C4 diagrams as `<pre>` blocks (keep the ASCII — it's already a diagram), component table, decision summary linking ADR anchors in decision-log.html |
