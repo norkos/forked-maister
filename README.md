@@ -126,7 +126,7 @@ Standards live in `.maister/docs/standards/` and are indexed in `.maister/docs/I
 
 ## Upstream
 
-This plugin is a fork of **Maister** by Skillpanel (Marek, marek@skillpanel.com), originally published at [SkillPanel/maister](https://github.com/SkillPanel/maister) under the marketplace name `maister-plugins`. The fork was taken from upstream version **2.2.3** (commit `f75ef4f`) and renamed to `maister-fork` so it can coexist with, and never be confused for, the original. All credit for the workflow design belongs to the original author; this fork only removes and hardens components for use on private codebases.
+This plugin is a fork of **Maister** by Marek Kaluzny (SkillPanel.com), originally published at [SkillPanel/maister](https://github.com/SkillPanel/maister) under the marketplace name `maister-plugins`. The fork was taken from upstream version **2.2.3** (commit `f75ef4f`) and renamed to `maister-fork` so it can coexist with, and never be confused for, the original. All credit for the workflow design belongs to the original author; this fork only removes and hardens components for use on private codebases.
 
 ## Differences from the original plugin
 
@@ -194,6 +194,10 @@ You can also append additional instructions to narrow scope or guide the workflo
 ```bash
 /maister-fork:development .maister/tasks/development/2026-03-24-my-feature
 ```
+
+## License
+
+MIT. The original work is copyright Marek Kaluzny (SkillPanel.com) and Maister contributors; the modifications in this fork are copyright norkos. See [LICENSE](LICENSE). This fork is independent and is not endorsed by the original author.
 
 ## Learn More
 
